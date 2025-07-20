@@ -20,7 +20,7 @@ def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", ax
         axis_progress (str, optional): The progress axis. Defaults to "Progress".
 
     Raises:
-        ValueError: _description_
+        ValueError: If the required columns ('axis_date', 'axis_label', or 'axis_progress') are missing from the input data.
     """
     # Load the data
     data = pd.read_csv(filepath, sep='\t')
