@@ -35,15 +35,9 @@ def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", ax
     data[axis_label] = data[axis_label]
     data[axis_progress] = data[axis_progress].str.replace(',', '.').astype(float)
 
-    # Combine date and time
-    data['DateTime'] = data[axis_date] + data[axis_label]
-
-    # Sort by datetime
-    data = data.sort_values(by='DateTime')
-
     # Generate a complete date range
-    full_date_range = pd.date_range(start=data['DateTime'].min().floor('D'), end=data['DateTime'].max().floor('D'), freq='D')
-    data = data.set_index(data['DateTime'].dt.floor('D')).reindex(full_date_range).reset_index()
+    full_date_range = pd.date_range(start=data[axis_date].min().floor('D'), end=data[axis_date].max().floor('D'), freq='D')
+    data = data.set_index(data[axis_date].dt.floor('D')).reindex(full_date_range).reset_index()
     data.rename(columns={'index': 'FullDate'}, inplace=True)
 
     # Fill missing progress values with NaN
