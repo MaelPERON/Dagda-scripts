@@ -9,7 +9,7 @@ def parse_date(date_str):
 
     return datetime.strptime(date_str, "%B %d, %Y")
 
-def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axis_date: str = "Date", axis_progress: str = "Progress"):
+def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", axis_date: str = "Date", axis_progress: str = "Progress"):
     """Plots the progress data from a TSV file.
 
     Args:
@@ -26,17 +26,17 @@ def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axi
     data = pd.read_csv(filepath, sep='\t')
 
     # Ensure the required columns are present
-    if axis_date not in data.columns or axis_time not in data.columns or axis_progress not in data.columns:
-        raise ValueError(f"Required columns '{axis_date}', '{axis_time}', or '{axis_progress}' are missing from the data.")
+    if axis_date not in data.columns or axis_label not in data.columns or axis_progress not in data.columns:
+        raise ValueError(f"Required columns '{axis_date}', '{axis_label}', or '{axis_progress}' are missing from the data.")
 
     display_name = display_name or "Progress Over Time"
 
     data[axis_date] = data[axis_date].apply(parse_date)
-    data[axis_time] = pd.to_timedelta(data[axis_time])
+    data[axis_label] = data[axis_label]
     data[axis_progress] = data[axis_progress].str.replace(',', '.').astype(float)
 
     # Combine date and time
-    data['DateTime'] = data[axis_date] + data[axis_time]
+    data['DateTime'] = data[axis_date] + data[axis_label]
 
     # Sort by datetime
     data = data.sort_values(by='DateTime')
@@ -55,9 +55,9 @@ def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axi
     plt.fill_between(data['FullDate'].dt.strftime('%d/%m'), data[axis_progress], step='post', alpha=0.3, color='blue')
 
     # Add labels only for existing data points
-    filtered_data = data.dropna(subset=[axis_time])  # Keep only original data points
+    filtered_data = data.dropna(subset=[axis_label])  # Keep only original data points
     for i, row in filtered_data.iterrows():
-        plt.text(row['FullDate'].strftime('%d/%m'), row[axis_progress], f"{row[axis_progress]} ({row[axis_time]})", fontsize=8, ha='right')
+        plt.text(row['FullDate'].strftime('%d/%m'), row[axis_progress], f"{row[axis_progress]} ({row[axis_label]})", fontsize=8, ha='right')
 
     # Configure plot
     plt.xlabel('Date (DD/MM)')
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     plot_progress(
         filepath=args.filepath,
         display_name=args.display_name,
-        axis_time=args.axis_time,
+        axis_label=args.axis_time,
         axis_date=args.axis_date,
         axis_progress=args.axis_progress
     )
