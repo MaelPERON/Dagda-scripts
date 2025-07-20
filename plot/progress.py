@@ -46,7 +46,25 @@ def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", ax
     # Plot the data as a stairs plot with filled area
     plt.figure(figsize=(10, 6))
     plt.step(data['FullDate'].dt.strftime('%d/%m'), data[axis_progress], where='post', label='Progress', color='blue')
-    plt.fill_between(data['FullDate'].dt.strftime('%d/%m'), data[axis_progress], step='post', alpha=0.3, color='blue')
+
+    # Fill areas for empty days with red and others with blue
+    for i in range(len(data) - 1):
+        if pd.isna(data.loc[i, axis_label]):  # Check if the day is empty
+            plt.fill_between(
+                data.loc[i:i+1, 'FullDate'].dt.strftime('%d/%m'),
+                data.loc[i:i+1, axis_progress],
+                step='post',
+                alpha=0.3,
+                color='red'
+            )
+        else:
+            plt.fill_between(
+                data.loc[i:i+1, 'FullDate'].dt.strftime('%d/%m'),
+                data.loc[i:i+1, axis_progress],
+                step='post',
+                alpha=0.3,
+                color='blue'
+            )
 
     # Add labels only for existing data points
     filtered_data = data.dropna(subset=[axis_label])  # Keep only original data points
