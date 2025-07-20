@@ -23,13 +23,21 @@ data['DateTime'] = data['Date'] + data['Time']
 # Sort by datetime
 data = data.sort_values(by='DateTime')
 
+# Generate a complete date range
+full_date_range = pd.date_range(start=data['DateTime'].min().floor('D'), end=data['DateTime'].max().floor('D'), freq='D')
+data = data.set_index(data['DateTime'].dt.floor('D')).reindex(full_date_range).reset_index()
+data.rename(columns={'index': 'FullDate'}, inplace=True)
+
+# Fill missing progress values with NaN
+data['Progress'] = data['Progress'].fillna(method='ffill')  # Forward fill for continuity
+
 # Plot the data
 plt.figure(figsize=(10, 6))
-plt.plot(data['DateTime'].dt.strftime('%d/%m'), data['Progress'], marker='o', label='Progress')
+plt.plot(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], marker='o', label='Progress')
 
-# Add labels to each point
-for i, row in data.iterrows():
-    plt.text(row['DateTime'].strftime('%d/%m'), row['Progress'], f"{row['Progress']} ({row['Time']})", fontsize=8, ha='right')
+# Add labels only for existing data points
+for i, row in data.dropna(subset=['Time']).iterrows():
+    plt.text(row['FullDate'].strftime('%d/%m'), row['Progress'], f"{row['Progress']} ({row['Time']})", fontsize=8, ha='right')
 
 # Configure plot
 plt.xlabel('Date (DD/MM)')
@@ -40,6 +48,6 @@ plt.grid(True)
 plt.tight_layout()
 
 # Save and show the plot
-output_path = r'D:\Documents\Github\Forks\Dagda-scripts\plot\progress_plot.png'
-plt.savefig(output_path)
+# output_path = r'D:\Documents\Github\Forks\Dagda-scripts\plot\progress_plot.png'
+# plt.savefig(output_path)
 plt.show()
