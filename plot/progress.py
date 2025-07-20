@@ -62,7 +62,7 @@ def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axi
     # Configure plot
     plt.xlabel('Date (DD/MM)')
     plt.ylabel('Progress')
-    plt.title('Progress Over Time')
+    plt.title(display_name)
     plt.ylim(0, 1)
     plt.grid(True)
     plt.tight_layout()
