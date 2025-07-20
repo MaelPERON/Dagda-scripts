@@ -8,7 +8,7 @@ def parse_date(date_str):
 
     return datetime.strptime(date_str, "%B %d, %Y")
 
-def plot_progress(filepath, display_name: str = ""):
+def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axis_date: str = "Date", axis_progress: str = "Progress"):
     """
     Plots the progress data from a TSV file.
 
@@ -20,12 +20,12 @@ def plot_progress(filepath, display_name: str = ""):
     data = pd.read_csv(filepath, sep='\t')
     display_name = display_name or "Progress Over Time"
 
-    data['Date'] = data['Date'].apply(parse_date)
-    data['Time'] = pd.to_timedelta(data['Time'])
-    data['Progress'] = data['Progress'].str.replace(',', '.').astype(float)
+    data[axis_date] = data[axis_date].apply(parse_date)
+    data[axis_time] = pd.to_timedelta(data[axis_time])
+    data[axis_progress] = data[axis_progress].str.replace(',', '.').astype(float)
 
     # Combine date and time
-    data['DateTime'] = data['Date'] + data['Time']
+    data['DateTime'] = data[axis_date] + data[axis_time]
 
     # Sort by datetime
     data = data.sort_values(by='DateTime')
@@ -36,17 +36,17 @@ def plot_progress(filepath, display_name: str = ""):
     data.rename(columns={'index': 'FullDate'}, inplace=True)
 
     # Fill missing progress values with NaN
-    data['Progress'] = data['Progress'].fillna(method='ffill')  # Forward fill for continuity
+    data[axis_progress] = data[axis_progress].fillna(method='ffill')  # Forward fill for continuity
 
     # Plot the data as a stairs plot with filled area
     plt.figure(figsize=(10, 6))
-    plt.step(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], where='post', label='Progress', color='blue')
-    plt.fill_between(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], step='post', alpha=0.3, color='blue')
+    plt.step(data['FullDate'].dt.strftime('%d/%m'), data[axis_progress], where='post', label='Progress', color='blue')
+    plt.fill_between(data['FullDate'].dt.strftime('%d/%m'), data[axis_progress], step='post', alpha=0.3, color='blue')
 
     # Add labels only for existing data points
-    filtered_data = data.dropna(subset=['Time'])  # Keep only original data points
+    filtered_data = data.dropna(subset=[axis_time])  # Keep only original data points
     for i, row in filtered_data.iterrows():
-        plt.text(row['FullDate'].strftime('%d/%m'), row['Progress'], f"{row['Progress']} ({row['Time']})", fontsize=8, ha='right')
+        plt.text(row['FullDate'].strftime('%d/%m'), row[axis_progress], f"{row[axis_progress]} ({row[axis_time]})", fontsize=8, ha='right')
 
     # Configure plot
     plt.xlabel('Date (DD/MM)')
@@ -60,3 +60,7 @@ def plot_progress(filepath, display_name: str = ""):
     # output_path = r'D:\Documents\Github\Forks\Dagda-scripts\plot\progress_plot.png'
     # plt.savefig(output_path)
     plt.show()
+
+if __name__ == "__main__":
+    filepath = r'd:\Documents\Github\Forks\Dagda-scripts\data\plot\progress.tsv'
+    plot_progress(filepath, display_name="UE Environment Progress")
