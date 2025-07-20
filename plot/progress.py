@@ -31,12 +31,14 @@ data.rename(columns={'index': 'FullDate'}, inplace=True)
 # Fill missing progress values with NaN
 data['Progress'] = data['Progress'].fillna(method='ffill')  # Forward fill for continuity
 
-# Plot the data
+# Plot the data as a stairs plot with filled area
 plt.figure(figsize=(10, 6))
-plt.plot(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], marker='o', label='Progress')
+plt.step(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], where='post', label='Progress', color='blue')
+plt.fill_between(data['FullDate'].dt.strftime('%d/%m'), data['Progress'], step='post', alpha=0.3, color='blue')
 
 # Add labels only for existing data points
-for i, row in data.dropna(subset=['Time']).iterrows():
+filtered_data = data.dropna(subset=['Time'])  # Keep only original data points
+for i, row in filtered_data.iterrows():
     plt.text(row['FullDate'].strftime('%d/%m'), row['Progress'], f"{row['Progress']} ({row['Time']})", fontsize=8, ha='right')
 
 # Configure plot
