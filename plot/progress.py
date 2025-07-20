@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
+import argparse
 
 def parse_date(date_str):
     if date_str.startswith('@'):
@@ -72,5 +73,19 @@ def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axi
     plt.show()
 
 if __name__ == "__main__":
-    filepath = r'd:\Documents\Github\Forks\Dagda-scripts\data\plot\progress.tsv'
-    plot_progress(filepath, display_name="UE Environment Progress")
+    parser = argparse.ArgumentParser(description="Plot progress from a TSV file.")
+    parser.add_argument("filepath", help="Path to the TSV file containing the progress data.")
+    parser.add_argument("--display_name", default="", help="Plot name to display as title.")
+    parser.add_argument("--axis_time", "-t", default="Time", help="The time axis column name.")
+    parser.add_argument("--axis_date", "-d", default="Date", help="The date axis column name.")
+    parser.add_argument("--axis_progress", "-p", default="Progress", help="The progress axis column name.")
+
+    args = parser.parse_args()
+
+    plot_progress(
+        filepath=args.filepath,
+        display_name=args.display_name,
+        axis_time=args.axis_time,
+        axis_date=args.axis_date,
+        axis_progress=args.axis_progress
+    )
