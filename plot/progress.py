@@ -15,7 +15,7 @@ def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", ax
     Args:
         filepath (str): Path to the TSV file containing the progress data.
         display_name (str, optional): Plot name to display as title. Defaults to "".
-        axis_time (str, optional): The time axis. Defaults to "Time".
+        axis_label (str, optional): The time axis. Defaults to "Time".
         axis_date (str, optional): The date axis. Defaults to "Date".
         axis_progress (str, optional): The progress axis. Defaults to "Progress".
 
