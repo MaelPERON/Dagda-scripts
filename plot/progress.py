@@ -9,15 +9,25 @@ def parse_date(date_str):
     return datetime.strptime(date_str, "%B %d, %Y")
 
 def plot_progress(filepath, display_name: str = "", axis_time: str = "Time", axis_date: str = "Date", axis_progress: str = "Progress"):
-    """
-    Plots the progress data from a TSV file.
+    """Plots the progress data from a TSV file.
 
     Args:
-        filepath (str): Path to the TSV file containing progress data.
-        display_name (bool): Whether to display the name in the plot.
+        filepath (str): Path to the TSV file containing the progress data.
+        display_name (str, optional): Plot name to display as title. Defaults to "".
+        axis_time (str, optional): The time axis. Defaults to "Time".
+        axis_date (str, optional): The date axis. Defaults to "Date".
+        axis_progress (str, optional): The progress axis. Defaults to "Progress".
+
+    Raises:
+        ValueError: _description_
     """
     # Load the data
     data = pd.read_csv(filepath, sep='\t')
+
+    # Ensure the required columns are present
+    if axis_date not in data.columns or axis_time not in data.columns or axis_progress not in data.columns:
+        raise ValueError(f"Required columns '{axis_date}', '{axis_time}', or '{axis_progress}' are missing from the data.")
+
     display_name = display_name or "Progress Over Time"
 
     data[axis_date] = data[axis_date].apply(parse_date)
