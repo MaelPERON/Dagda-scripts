@@ -41,7 +41,7 @@ def plot_progress(filepath, display_name: str = "", axis_label: str = "Time", ax
     data.rename(columns={'index': 'FullDate'}, inplace=True)
 
     # Fill missing progress values with NaN
-    data[axis_progress] = data[axis_progress].fillna(method='ffill')  # Forward fill for continuity
+    data[axis_progress] = data[axis_progress].ffill()  # Forward fill for continuity
 
     # Plot the data as a stairs plot with filled area
     plt.figure(figsize=(10, 6))
