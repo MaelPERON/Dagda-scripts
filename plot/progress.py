@@ -10,15 +10,8 @@ data = pd.read_csv(file_path, sep='\t')
 def parse_date(date_str):
     if date_str.startswith('@'):
         date_str = date_str[1:].strip()
-    if date_str.lower() == "today":
-        return datetime.now()
-    elif date_str.lower() == "yesterday":
-        return datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - pd.Timedelta(days=1)
-    elif date_str.lower() == "last sunday":
-        today = datetime.now()
-        return today - pd.Timedelta(days=today.weekday() + 1)
-    else:
-        return datetime.strptime(date_str, "%B %d, %Y")
+
+    return datetime.strptime(date_str, "%B %d, %Y")
 
 data['Date'] = data['Date'].apply(parse_date)
 data['Time'] = pd.to_timedelta(data['Time'])
