@@ -17,6 +17,9 @@ def list_scripts() -> Generator[tuple[Path, str], None, None]:
 		if folder_name in EXCLUDE_FOLDERS: continue
 		yield (file, f"{folder_name}-{file.stem}")
 
+def read_template() -> str:
+	return (SCRIPT_FOLDER / "print_scripts.py").read_text(encoding="utf-8")
+
 def compile_all(folder: str = ""):
 	for file, identifier in list_scripts():
 		folder_name = file.parent.name
