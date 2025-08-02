@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 from py_compile import compile
 from typing import Generator
+from datetime import datetime
 
 SCRIPT = Path(__file__)
 SCRIPT_FOLDER = Path(__file__).parent
@@ -27,6 +28,18 @@ def compile_all(folder: str = ""):
 		print(f"Processing {identifier}...")
 		compile_dest = COMPILE_FOLDER / f"{identifier}.pyc"
 		compile(file, compile_dest)
+
+	# Duplicating the template file and modifying it
+	print_script_content = read_template().splitlines()
+	print_script_content[2] = f"# Generated {datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}"
+	print_script_content[4] = f'scripts = {list(f.name for f in COMPILE_FOLDER.glob("*.pyc"))}'
+	del print_script_content[:2]
+
+	# Creating a py file, compiling it, deleting it afterwards
+	print_script_path = COMPILE_FOLDER / "print_scripts.py"
+	print_script_path.write_text("\n".join(print_script_content), encoding="utf-8")
+	compile(print_script_path, COMPILE_FOLDER / "print_scripts.pyc")
+	# print_script_path.unlink()
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Compile all Python scripts in subfolders.")
