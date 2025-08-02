@@ -1,5 +1,7 @@
 """ FILE TEMPLATE """
 
+# GENERATED AT
+import argparse
 scripts = [] # Will be populated with script identifiers
 
 def print_scripts(folder: str = ""):
@@ -12,3 +14,10 @@ def print_scripts(folder: str = ""):
 			head = script_group
 			print(f"\n{head.upper()}")
 		print(f"{script_name}")
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description="List available scripts.")
+	parser.add_argument("--folder", type=str, help="Filter scripts by folder/group", default="")
+	args = parser.parse_args()
+
+	print_scripts(args.folder)
