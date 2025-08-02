@@ -5,6 +5,7 @@ import argparse
 scripts = [] # Will be populated with script identifiers
 
 def print_scripts(folder: str = ""):
+	global scripts
 	head = ""
 	print("Available scripts:")
 	for script in scripts:
@@ -13,7 +14,7 @@ def print_scripts(folder: str = ""):
 		if script_group != head:
 			head = script_group
 			print(f"\n{head.upper()}")
-		print(f"{script_name}")
+		print(f"{script_name}\t\t{script}")
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="List available scripts.")
