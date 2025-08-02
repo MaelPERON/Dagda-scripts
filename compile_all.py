@@ -16,8 +16,10 @@ def list_scripts() -> Generator[tuple[Path, str], None, None]:
 		if folder_name in EXCLUDE_FOLDERS: continue
 		yield (file, f"{folder_name}-{file.stem}")
 
-def compile_all():
+def compile_all(folder: str = ""):
 	for file, identifier in list_scripts():
+		folder_name = file.parent.name
+		if folder and folder_name != folder: continue # Only compile scripts in the specified folder (if provided)
 		print(f"Processing {identifier}...")
 		compile_dest = COMPILE_FOLDER / f"{identifier}.pyc"
 		compile(file, compile_dest)
