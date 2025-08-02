@@ -41,7 +41,7 @@ def compile_all(folder: str = ""):
 	print_script_path = COMPILE_FOLDER / "print_scripts.py"
 	print_script_path.write_text("\n".join(print_script_content), encoding="utf-8")
 	compile(print_script_path, COMPILE_FOLDER / "print_scripts.pyc", doraise=True)
-	# print_script_path.unlink()
+	print_script_path.unlink()
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Compile all Python scripts in subfolders.")
