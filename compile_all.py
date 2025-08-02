@@ -22,23 +22,25 @@ def read_template() -> str:
 	return (SCRIPT_FOLDER / "print_scripts.py").read_text(encoding="utf-8")
 
 def compile_all(folder: str = ""):
+	scripts = []
 	for file, identifier in list_scripts():
 		folder_name = file.parent.name
 		if folder and folder_name != folder: continue # Only compile scripts in the specified folder (if provided)
 		print(f"Processing {identifier}...")
+		scripts.append(identifier)
 		compile_dest = COMPILE_FOLDER / f"{identifier}.pyc"
 		compile(file, compile_dest)
 
 	# Duplicating the template file and modifying it
 	print_script_content = read_template().splitlines()
 	print_script_content[2] = f"# Generated {datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}"
-	print_script_content[4] = f'scripts = {list(f.name for f in COMPILE_FOLDER.glob("*.pyc"))}'
+	print_script_content[4] = f'scripts = {scripts!r}'
 	del print_script_content[:2]
 
 	# Creating a py file, compiling it, deleting it afterwards
 	print_script_path = COMPILE_FOLDER / "print_scripts.py"
 	print_script_path.write_text("\n".join(print_script_content), encoding="utf-8")
-	compile(print_script_path, COMPILE_FOLDER / "print_scripts.pyc")
+	compile(print_script_path, COMPILE_FOLDER / "print_scripts.pyc", doraise=True)
 	# print_script_path.unlink()
 
 if __name__ == "__main__":
