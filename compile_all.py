@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 from py_compile import compile
 from typing import Generator
@@ -23,3 +24,11 @@ def compile_all(folder: str = ""):
 		print(f"Processing {identifier}...")
 		compile_dest = COMPILE_FOLDER / f"{identifier}.pyc"
 		compile(file, compile_dest)
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description="Compile all Python scripts in subfolders.")
+	parser.add_argument("--folder", type=str, default="", help="Only compile scripts in the specified folder")
+	args = parser.parse_args()
+
+	COMPILE_FOLDER.mkdir(exist_ok=True)
+	compile_all(args.folder)
