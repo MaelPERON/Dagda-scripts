@@ -36,7 +36,7 @@ def compile_all(folder: str = "", debug: bool = False):
 	# Duplicating the template file and modifying it
 	print("Generating print_scripts.py...")
 	print_script_content = read_template().splitlines()
-	print_script_content[2] = f"# Generated {datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}"
+	print_script_content[2] = f"generated = \"{datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}\""
 	print_script_content[4] = f'scripts = {scripts!r}'
 	del print_script_content[:2]
 

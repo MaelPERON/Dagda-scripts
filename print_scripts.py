@@ -1,12 +1,13 @@
 """ FILE TEMPLATE """
 
-# GENERATED AT
+generated = "" # This will be replaced with the generation date and time
 import argparse
 scripts = [] # Will be populated with script identifiers
 
 def print_scripts(folder: str = ""):
 	global scripts
 	head = ""
+	print(f"Generated on: {generated}\n")
 	print("Available scripts:")
 	for script in scripts:
 		script_group, script_name = script.split("-", 1)
