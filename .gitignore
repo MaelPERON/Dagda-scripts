@@ -1,6 +1,7 @@
 # My Exceptions
 tests/
 data/
+compiled/
 
 
 # Byte-compiled / optimized / DLL files
